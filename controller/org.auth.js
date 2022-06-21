@@ -71,7 +71,7 @@ exports.getOrgById = (req,res)=>{
     }
 }
 
-exports.checkOrgToken = async (req,res,next)=>{
+exports.checkOrgTokenMiddleware = async (req,res,next)=>{
     const token = req.body.token
     if(!token){
         return res.json({
@@ -107,6 +107,55 @@ exports.checkOrgToken = async (req,res,next)=>{
         }
 
         next()
+
+    } catch (error) {
+        return res.json({
+            success:false,
+            message:"Something went wrong...!"
+        })
+    }
+
+}
+
+exports.checkOrgToken = async (req,res)=>{
+    const token = req.body.token
+    if(!token){
+        return res.json({
+            success:false,
+            message:"Unauthorized User...!"
+        })
+    }
+    let decodeToken
+    try{
+        decodeToken = jwt.verify(token,process.env.TOKEN)
+    }catch(err){
+        return res.json({
+            success:false,
+            message:"Unauthorized User...!"
+        })
+    }
+
+    if(!decodeToken.id){
+        return res.json({
+            success:false,
+            message:"Unauthorized User...!"
+        })
+    } 
+
+
+    try {
+        const organization = await Org.findById(decodeToken.id)
+        if(!organization){
+            return res.json({
+                success:false,
+                message:"Unauthorized User...!"
+            })
+        }
+
+        return res.json({
+            success:true,
+            message:"Authorized User...!"
+        })
 
     } catch (error) {
         return res.json({

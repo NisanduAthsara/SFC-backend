@@ -64,3 +64,28 @@ exports.createOrg = async (req,res)=>{
             });
         });
 }
+
+
+exports.findOrg = async(req,res)=>{
+    if(!req.body.userId){
+        return res.json({
+            success:false,
+            message:"Something went wrong...!"
+        })
+    }
+    const {userId} = req.body
+    const organization = await Org.findOne({userId})
+
+    if(!organization){
+        return res.json({
+            success:false,
+            message:"Haven't an organization...!"
+        })
+    }
+
+    const token = jwt.sign({id:organization._id},process.env.TOKEN,{expiresIn: "48h"})
+    return res.json({
+        success:true,
+        token
+    })
+}
