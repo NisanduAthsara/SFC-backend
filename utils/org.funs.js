@@ -1,3 +1,14 @@
+const User = require('../models/user.model')
+
+async function checkUserId(id){
+    const user = User.findById(id)
+    if(user){
+        return false
+    }else{
+        return true
+    }
+}
+
 exports.verifyOrgData = (name, contactNo, city, sellItem, Address, userId, openingHours, imgLink,accountType) => {
     const sellItems = ['fuel','gas','milk powder']
     const areas = ['Kalutara','Colombo','Gampaha','Ampara','Anuradhapura','Badulla','Batticaloa','Galle','Hambantota','Jaffna','Kandy','Kegalla','Kilinochchi','Kurunegala','Mannar','Matale','Matara','Moneragala','Mullaitivu','Nuwara Eliya','Polonnaruwa','Puttalam','Ratnapura','Trincomalee','Vavuniya']
@@ -26,7 +37,7 @@ exports.verifyOrgData = (name, contactNo, city, sellItem, Address, userId, openi
             reject("Invalid Address");
         }
 
-        if(!userId){
+        if(!userId || checkUserId(userId)){
             reject("Invalid ID");
         }
 
