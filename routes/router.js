@@ -4,6 +4,7 @@ const {signup,login} = require('../controller/user.loginSignup')
 const {getUserId,getUserById,authMiddleware,checkUserToken} = require('../controller/user.auth')
 const {createOrg,findOrg} = require('../controller/org.controller')
 const {getOrgId,getOrgById,checkOrgTokenMiddleware,checkOrgToken} = require('../controller/org.auth')
+const {newProduct} = require('../controller/product.controller')
 
 //All User Routes
 router.post('/signup',signup)
@@ -18,5 +19,8 @@ router.post('/getOrgId',checkOrgTokenMiddleware,getOrgId)
 router.post('/getOrgById',checkOrgTokenMiddleware,getOrgById)
 router.post('/checkOrgToken',checkOrgToken)
 router.post('/findOrg',authMiddleware,findOrg)
+
+//Product Routes
+router.post('/newProduct',newProduct)
 
 module.exports = router
