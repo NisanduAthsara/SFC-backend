@@ -1,7 +1,7 @@
 const User = require('../models/user.model')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const {verifySignUpData} = require('../utils/funcs')
+const {verifySignUpData} = require('../utils/user.funcs')
 
 exports.signup = (req,res)=>{
     if(req.body){
