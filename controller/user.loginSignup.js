@@ -52,7 +52,66 @@ exports.signup = (req,res)=>{
                 });
             });
     }else{
-        console.log(req.body)
+        return res.json({
+            success:false,
+            message:"Something went wrong...!"
+        })
+    }
+}
+
+
+exports.login = (req,res)=>{
+    if(req.body){
+        const {email,password} = req.body
+        User.findOne({email})
+            .then((user)=>{
+                if(user){
+                    bcrypt.compare(password,user.password,(err,result)=>{
+                        if(err){
+                            console.log(err)
+                            return res.json({
+                                success:false,
+                                message:"Something went wrong"
+                            })
+                        }
+
+                        if(!result){
+                            return res.json({
+                                success:false,
+                                message:"Invalid Password"
+                            })
+                        }
+
+                        const token = jwt.sign({ id: user._id }, process.env.TOKEN, {
+                            expiresIn: "48h",
+                        });
+
+                        return res.json({
+                            success:true,
+                            message: "User logged in successfully!",
+							expiresIn: new Date(
+								new Date().getTime() + 172800000
+							).getTime(),
+							token,
+                        })
+
+                    })
+                }else{
+                    return res.json({
+                        success:false,
+                        message:"Invalid Email"
+                    })
+                }
+
+            })
+            .catch((err)=>{
+                console.log(err.message)
+                return res.json({
+                    success:false,
+                    message:"Something went wrong...!"
+                })
+            })
+    }else{
         return res.json({
             success:false,
             message:"Something went wrong...!"
