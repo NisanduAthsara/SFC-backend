@@ -52,6 +52,12 @@ exports.createOrg = async (req,res)=>{
                 })
         })
         .catch((err) => {
+            if(err.message == `Cast to ObjectId failed for value "${userId}" (type string) at path "_id" for model "users"`){
+                return res.send({
+                    success: false,
+                    message: 'Invalid ID'
+                })
+            }
             res.send({
                 success: false,
                 message: err,

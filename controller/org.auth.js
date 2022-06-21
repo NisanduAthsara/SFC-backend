@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
-const User = require('../models/user.model')
+const Org = require('../models/orginization.model')
 
-exports.getUserId = (req,res)=>{
+exports.getOrgId = (req,res)=>{
     if(req.body){
         const {token} = req.body
         if(!token){
@@ -40,8 +40,7 @@ exports.getUserId = (req,res)=>{
     }
 }
 
-
-exports.getUserById = (req,res)=>{
+exports.getOrgById = (req,res)=>{
     if(req.body){
         const {id} = req.body
         if(!id){
@@ -50,11 +49,11 @@ exports.getUserById = (req,res)=>{
                 message:"Something went wrong...!"
             })
         }
-        User.findById(id)
-            .then((user)=>{
+        Org.findById(id)
+            .then((organization)=>{
                 res.json({
                     success:true,
-                    user
+                    organization
                 })
             })
             .catch((err)=>{
@@ -72,7 +71,7 @@ exports.getUserById = (req,res)=>{
     }
 }
 
-exports.authMiddleware = async (req,res,next)=>{
+exports.checkOrgToken = async (req,res,next)=>{
     const token = req.body.token
     if(!token){
         return res.json({
@@ -97,9 +96,10 @@ exports.authMiddleware = async (req,res,next)=>{
         })
     } 
 
+
     try {
-        const user = await User.findById(decodeToken.id)
-        if(!user){
+        const organization = await Org.findById(decodeToken.id)
+        if(!organization){
             return res.json({
                 success:false,
                 message:"Unauthorized User...!"
@@ -107,54 +107,6 @@ exports.authMiddleware = async (req,res,next)=>{
         }
 
         next()
-
-    } catch (error) {
-        return res.json({
-            success:false,
-            message:"Something went wrong...!"
-        })
-    }
-}
-
-exports.checkUserToken = async (req,res)=>{
-    const token = req.body.token
-    if(!token){
-        return res.json({
-            success:false,
-            message:"Unauthorized User...!"
-        })
-    }
-    let decodeToken
-    try{
-        decodeToken = jwt.verify(token,process.env.TOKEN)
-    }catch(err){
-        return res.json({
-            success:false,
-            message:"Unauthorized User...!"
-        })
-    }
-
-    if(!decodeToken.id){
-        return res.json({
-            success:false,
-            message:"Unauthorized User...!"
-        })
-    } 
-
-
-    try {
-        const user = await User.findById(decodeToken.id)
-        if(!user){
-            return res.json({
-                success:false,
-                message:"Unauthorized User...!"
-            })
-        }
-
-        return res.json({
-            success:true,
-            message:"Authorized User...!"
-        })
 
     } catch (error) {
         return res.json({

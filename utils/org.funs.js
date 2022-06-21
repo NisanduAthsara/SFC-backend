@@ -1,7 +1,7 @@
 const User = require('../models/user.model')
 
 async function checkUserId(id){
-    const user = User.findById(id)
+    const user = await User.findById(id)
     if(user){
         return false
     }else{
@@ -9,10 +9,11 @@ async function checkUserId(id){
     }
 }
 
-exports.verifyOrgData = (name, contactNo, city, sellItem, Address, userId, openingHours, imgLink,accountType) => {
+exports.verifyOrgData = async (name, contactNo, city, sellItem, Address, userId, openingHours, imgLink,accountType) => {
     const sellItems = ['fuel','gas','milk powder']
     const areas = ['Kalutara','Colombo','Gampaha','Ampara','Anuradhapura','Badulla','Batticaloa','Galle','Hambantota','Jaffna','Kandy','Kegalla','Kilinochchi','Kurunegala','Mannar','Matale','Matara','Moneragala','Mullaitivu','Nuwara Eliya','Polonnaruwa','Puttalam','Ratnapura','Trincomalee','Vavuniya']
-	return new Promise((resolve, reject) => {
+	const isVerifiedId = await checkUserId(userId)
+    return new Promise((resolve, reject) => {
 		if (!name || typeof name != "string") {
 			reject("Invalid Name");
 		}
@@ -36,8 +37,8 @@ exports.verifyOrgData = (name, contactNo, city, sellItem, Address, userId, openi
         if(!Address || Address.length < 5){
             reject("Invalid Address");
         }
-
-        if(!userId || checkUserId(userId)){
+        
+        if(!userId || isVerifiedId){
             reject("Invalid ID");
         }
 
