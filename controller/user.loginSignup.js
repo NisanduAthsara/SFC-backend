@@ -1,4 +1,6 @@
 const User = require('../models/user.model')
+const Org = require('../models/orginization.model')
+const Product = require('../models/product.model')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const {verifySignUpData} = require('../utils/user.funcs')
@@ -117,4 +119,63 @@ exports.login = (req,res)=>{
             message:"Something went wrong...!"
         })
     }
+}
+
+exports.deleteUser = async(req,res)=>{
+    if(!req.body){
+        return res.json({
+            success:false,
+            message:"Something went wrong...!"
+        })
+    }
+
+    const {userId} = req.body
+    try {
+        const delUser = await User.findByIdAndDelete(userId)
+        if(!delUser){
+            return res.json({
+                success:false,
+                message:"Unable to delete user...!"
+            })
+        }
+        const orgByUserId = await Org.findOne({userId})
+        if(!orgByUserId){
+            return res.json({
+                success:true,
+                message:"Successfully Deleted User...!"
+            })
+        }
+        const delOrg = await Org.findOneAndDelete({userId})
+        if(!delOrg){
+            return res.json({
+                success:false,
+                message:"Unable to delete user...!"
+            })
+        }
+        const orgId = delOrg._id
+        const prodByOrg = await Product.findOne({organizationId:orgId})
+        if(!prodByOrg){
+            return res.json({
+                success:false,
+                message:"Unable to delete user...!"
+            })
+        }
+        const delProd = await Product.deleteMany({organizationId:orgId})
+        if(!delProd){
+            return res.json({
+                success:false,
+                message:"Unable to delete user...!"
+            })
+        }
+        return res.json({
+            success:true,
+            message:"Successfully Deleted User...!"
+        })
+    } catch (error) {
+        return res.json({
+            success:false,
+            message:"Something went wrong...!"
+        })
+    }
+    
 }

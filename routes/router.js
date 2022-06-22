@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const {signup,login} = require('../controller/user.loginSignup')
+const {signup,login,deleteUser} = require('../controller/user.loginSignup')
 const {getUserId,getUserById,authMiddleware,checkUserToken} = require('../controller/user.auth')
 const {createOrg,findOrg} = require('../controller/org.controller')
 const {getOrgId,getOrgById,checkOrgTokenMiddleware,checkOrgToken} = require('../controller/org.auth')
@@ -13,6 +13,7 @@ router.post('/login',login)
 router.post('/getUserId',authMiddleware,getUserId)
 router.post('/getUser',authMiddleware,getUserById)
 router.post('/checkUserToken',checkUserToken)
+router.delete('/deleteUser',authMiddleware,deleteUser)
 
 //Organization Routes
 router.post('/orgSignup',authMiddleware,createOrg)

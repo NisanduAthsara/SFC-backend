@@ -65,6 +65,13 @@ exports.findProducts = async(req,res)=>{
         })
     }
 
+    if(products.length < 1){
+        return res.json({
+            success:true,
+            message:"No Products...!"
+        })
+    }
+
     return res.json({
         success:true,
         products
@@ -85,6 +92,13 @@ exports.findSpecificProduct = async (req,res)=>{
         return res.json({
             success:false,
             message:"Product Not Found...!"
+        })
+    }
+
+    if(product.length < 1){
+        return res.json({
+            success:true,
+            message:"No Products...!"
         })
     }
 

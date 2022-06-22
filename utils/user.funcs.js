@@ -55,7 +55,7 @@ exports.verifySignUpData = (username, email, password, livingArea, accountType) 
             reject("Invalid Account Type");
         }
 
-        if(accountType !== 'Buyer' && !accountType !== 'Seller'){
+        if(accountType !== 'Buyer' && accountType !== 'Seller'){
             reject("Invalid Account Type");
         }
 
