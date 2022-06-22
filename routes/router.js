@@ -5,7 +5,7 @@ const {getUserId,getUserById,authMiddleware,checkUserToken} = require('../contro
 const {createOrg,findOrg} = require('../controller/org.controller')
 const {getOrgId,getOrgById,checkOrgTokenMiddleware,checkOrgToken} = require('../controller/org.auth')
 const {newProduct,findProducts,findSpecificProduct} = require('../controller/product.controller')
-const {findAllProducts,findProductBySellItem,findProductByArea,userFindSpecificProduct} = require('../controller/buyer.controller')
+const {findAllProducts,findProductBySellItem,findProductByArea,userFindSpecificProduct,findProductByAreaAndType} = require('../controller/buyer.controller')
 
 //All User Routes
 router.post('/signup',signup)
@@ -31,5 +31,6 @@ router.post('/findAllProducts',authMiddleware,findAllProducts)
 router.post('/findProductBySellItem',authMiddleware,findProductBySellItem)
 router.post('/findProductByArea',authMiddleware,findProductByArea)
 router.post('/userFindSpecificProduct',authMiddleware,userFindSpecificProduct)
+router.post('/findProductByAreaAndType',authMiddleware,findProductByAreaAndType)
 
 module.exports = router

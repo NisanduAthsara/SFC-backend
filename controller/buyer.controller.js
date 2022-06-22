@@ -152,3 +152,92 @@ exports.userFindSpecificProduct = async(req,res)=>{
         product
     })
 }
+
+exports.findProductByAreaAndType = async(req,res)=>{
+    if(!req.body){
+        return res.json({
+            success:false,
+            message:"Something went wrong...!"
+        })
+    }
+
+    const {area,type} = req.body
+
+    const allProducts = await Product.find()
+    if(!allProducts){
+        return res.json({
+            success:true,
+            message:'No Products Found...!'
+        })
+    }
+
+    let idOrgArr = []
+
+    for(let prod of allProducts){
+        if(!idOrgArr.includes(prod.organizationId)){
+            idOrgArr.push(prod.organizationId)
+        }
+    }
+
+    if(idOrgArr < 1){
+        return res.json({
+            success:true,
+            message:'No Products Found...!'
+        })
+    }
+
+    let orgs = []
+
+    for(let id of idOrgArr){
+        let organization = await Org.findById(id)
+        if(!organization){
+            return res.json({
+                success:true,
+                message:'No Products Found...!'
+            })
+        }
+
+        if(organization.city == area){
+            orgs.push(id)
+        }
+    }
+
+    let finalProducts = []
+    for(let orgId of orgs){
+        const finalProduct = await Product.find({organizationId:orgId})
+        if(!finalProduct){
+            return res.json({
+                success:true,
+                message:'No Products Found...!'
+            })
+        }
+        finalProducts.push(finalProduct)
+    }
+
+    if(finalProducts.length < 1){
+        return res.json({
+            success:true,
+            message:'No Products Found...!'
+        })
+    }
+
+    const returnProducts = []
+    for(let prod of finalProducts[0]){
+        const itemType = checkProductType(prod.brand)
+        if(itemType == type){
+            returnProducts.push(prod)
+        }
+    }
+
+    if(returnProducts.length < 1){
+        return res.json({
+            success:true,
+            message:'No Products Found...!'
+        })
+    }
+
+    return res.json({
+        success:true,
+        products:returnProducts
+    })
+}
