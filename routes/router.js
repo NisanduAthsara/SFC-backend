@@ -4,7 +4,7 @@ const {signup,login} = require('../controller/user.loginSignup')
 const {getUserId,getUserById,authMiddleware,checkUserToken} = require('../controller/user.auth')
 const {createOrg,findOrg} = require('../controller/org.controller')
 const {getOrgId,getOrgById,checkOrgTokenMiddleware,checkOrgToken} = require('../controller/org.auth')
-const {newProduct} = require('../controller/product.controller')
+const {newProduct,findProducts,findSpecificProduct} = require('../controller/product.controller')
 
 //All User Routes
 router.post('/signup',signup)
@@ -21,6 +21,8 @@ router.post('/checkOrgToken',checkOrgToken)
 router.post('/findOrg',authMiddleware,findOrg)
 
 //Product Routes
-router.post('/newProduct',newProduct)
+router.post('/newProduct',checkOrgTokenMiddleware,newProduct)
+router.post('/findProducts',checkOrgTokenMiddleware,findProducts)
+router.post('/findSpecificProduct',checkOrgTokenMiddleware,findSpecificProduct)
 
 module.exports = router

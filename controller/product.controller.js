@@ -48,3 +48,48 @@ exports.newProduct = async(req,res)=>{
             })
         })
 }
+
+exports.findProducts = async(req,res)=>{
+    if(!req.body){
+        return res.json({
+            success:false,
+            message:"Something went wrong...!"
+        })
+    }
+    const {orgId} = req.body
+    const products = await Product.find({organizationId:orgId})
+    if(!products){
+        return res.json({
+            success:true,
+            message:"No Products...!"
+        })
+    }
+
+    return res.json({
+        success:true,
+        products
+    })
+}
+
+exports.findSpecificProduct = async (req,res)=>{
+    if(!req.body){
+        return res.json({
+            success:false,
+            message:"Something went wrong...!"
+        })
+    }
+
+    const {productId} = req.body
+    const product = await Product.findById(productId)
+    if(!product){
+        return res.json({
+            success:false,
+            message:"Product Not Found...!"
+        })
+    }
+
+    return res.json({
+        success:true,
+        product
+    })
+}
