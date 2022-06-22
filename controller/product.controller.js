@@ -107,3 +107,33 @@ exports.findSpecificProduct = async (req,res)=>{
         product
     })
 }
+
+exports.deleteProduct = async(req,res)=>{
+    if(!req.body){
+        return res.json({
+            success:false,
+            message:"Something went wrong...!"
+        })
+    }
+
+    const {productId} = req.body
+
+    try{
+        const delProduct = await Product.findByIdAndDelete(productId)
+        if(!delProduct){
+            return res.json({
+                success:false,
+                message:"Unable to Delete Product...!"
+            })
+        }
+        return res.json({
+            success:true,
+            message:"Successfully Deleted Product...!"
+        })
+    }catch(err){
+        return res.json({
+            success:false,
+            message:"Something went wrong...!"
+        })
+    }
+}

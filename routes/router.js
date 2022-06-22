@@ -4,7 +4,7 @@ const {signup,login,deleteUser} = require('../controller/user.loginSignup')
 const {getUserId,getUserById,authMiddleware,checkUserToken} = require('../controller/user.auth')
 const {createOrg,findOrg,deleteOrg} = require('../controller/org.controller')
 const {getOrgId,getOrgById,checkOrgTokenMiddleware,checkOrgToken} = require('../controller/org.auth')
-const {newProduct,findProducts,findSpecificProduct} = require('../controller/product.controller')
+const {newProduct,findProducts,findSpecificProduct,deleteProduct} = require('../controller/product.controller')
 const {findAllProducts,findProductBySellItem,findProductByArea,userFindSpecificProduct,findProductByAreaAndType} = require('../controller/buyer.controller')
 
 //All User Routes
@@ -27,6 +27,7 @@ router.delete('/deleteOrg',checkOrgTokenMiddleware,deleteOrg)
 router.post('/newProduct',checkOrgTokenMiddleware,newProduct)
 router.post('/findProducts',checkOrgTokenMiddleware,findProducts)
 router.post('/findSpecificProduct',checkOrgTokenMiddleware,findSpecificProduct)
+router.delete('/deleteProduct',checkOrgTokenMiddleware,deleteProduct)
 
 //Buyer Routes
 router.post('/findAllProducts',authMiddleware,findAllProducts)
