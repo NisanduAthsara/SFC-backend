@@ -156,8 +156,8 @@ exports.deleteUser = async(req,res)=>{
         const prodByOrg = await Product.findOne({organizationId:orgId})
         if(!prodByOrg){
             return res.json({
-                success:false,
-                message:"Unable to delete user...!"
+                success:true,
+                message:"Successfully Deleted User...!"
             })
         }
         const delProd = await Product.deleteMany({organizationId:orgId})

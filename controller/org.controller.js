@@ -1,4 +1,5 @@
 const Org = require('../models/orginization.model')
+const Product = require('../models/product.model')
 const {verifyOrgData} = require('../utils/org.funs')
 const jwt = require('jsonwebtoken')
 
@@ -88,4 +89,47 @@ exports.findOrg = async(req,res)=>{
         success:true,
         token
     })
+}
+
+exports.deleteOrg = async(req,res)=>{
+    if(!req.body){
+        return res.json({
+            success:false,
+            message:"Something went wrong...!"
+        })
+    }
+
+    const {orgId} = req.body
+    try {
+        const delOrg = await Org.findByIdAndDelete(orgId)
+        if(!delOrg){
+            return res.json({
+                success:false,
+                message:"Unable to Deleted Organization...!"
+            })
+        }
+        const productByOrgId = await Product.findOne({organizationId:orgId})
+        if(!productByOrgId){
+            return res.json({
+                success:true,
+                message:"Successfully Deleted Organization...!"
+            })
+        }
+        const delProd = await Product.deleteMany({organizationId:orgId})
+        if(!delProd){
+            return res.json({
+                success:false,
+                message:"Unable to Deleted Organization...!"
+            })
+        }
+        return res.json({
+            success:true,
+            message:"Successfully Deleted Organization...!"
+        })
+    } catch (error) {
+        return res.json({
+            success:false,
+            message:"Something went wrong...!"
+        })
+    }
 }
