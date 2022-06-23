@@ -179,3 +179,50 @@ exports.deleteUser = async(req,res)=>{
     }
     
 }
+
+exports.updateUser = async(req,res)=>{
+    if(!req.body){
+        return res.json({
+            success:false,
+            message:"Something went wrong...!"
+        })
+    }
+
+    const {userId,username,email,password,livingArea,accountType} = req.body
+    verifySignUpData(username,email,password,livingArea,accountType)
+        .then(async ()=>{
+            const updateObj = {
+                username,
+                email,
+                password,
+                livingArea,
+                accountType
+            }
+        
+            try{
+                const updatedUser = await User.findByIdAndUpdate(userId,updateObj,{useFindAndModify:false})
+                if(!updatedUser){
+                    return res.json({
+                        success:false,
+                        message:"Unable to Update User...!"
+                    })
+                }
+            
+                return res.json({
+                    success:true,
+                    message:"Successfully Updated User...!"
+                })
+            }catch(err){
+                return res.json({
+                    success:false,
+                    message:"Something went wrong...!"
+                })
+            }
+        })
+        .catch((err)=>{
+            return res.json({
+                success:false,
+                message:err
+            })
+        })
+}

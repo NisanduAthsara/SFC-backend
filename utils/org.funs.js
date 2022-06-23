@@ -1,10 +1,14 @@
 const User = require('../models/user.model')
 
 async function checkUserId(id){
-    const user = await User.findById(id)
-    if(user){
-        return false
-    }else{
+    try {
+        const user = await User.findById(id)
+        if(user){
+            return false
+        }else{
+            return true
+        }
+    } catch (error) {
         return true
     }
 }

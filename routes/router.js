@@ -1,8 +1,8 @@
 const express = require('express')
 const router = express.Router()
-const {signup,login,deleteUser} = require('../controller/user.loginSignup')
+const {signup,login,deleteUser,updateUser} = require('../controller/user.loginSignup')
 const {getUserId,getUserById,authMiddleware,checkUserToken} = require('../controller/user.auth')
-const {createOrg,findOrg,deleteOrg} = require('../controller/org.controller')
+const {createOrg,findOrg,deleteOrg,updateOrg} = require('../controller/org.controller')
 const {getOrgId,getOrgById,checkOrgTokenMiddleware,checkOrgToken} = require('../controller/org.auth')
 const {newProduct,findProducts,findSpecificProduct,deleteProduct} = require('../controller/product.controller')
 const {findAllProducts,findProductBySellItem,findProductByArea,userFindSpecificProduct,findProductByAreaAndType} = require('../controller/buyer.controller')
@@ -13,6 +13,7 @@ router.post('/login',login)
 router.post('/getUserId',authMiddleware,getUserId)
 router.post('/getUser',authMiddleware,getUserById)
 router.post('/checkUserToken',checkUserToken)
+router.put('/updateUser',authMiddleware,updateUser)
 router.delete('/deleteUser',authMiddleware,deleteUser)
 
 //Organization Routes
@@ -21,6 +22,7 @@ router.post('/getOrgId',checkOrgTokenMiddleware,getOrgId)
 router.post('/getOrgById',checkOrgTokenMiddleware,getOrgById)
 router.post('/checkOrgToken',checkOrgToken)
 router.post('/findOrg',authMiddleware,findOrg)
+router.put('/updateOrg',checkOrgTokenMiddleware,updateOrg)
 router.delete('/deleteOrg',checkOrgTokenMiddleware,deleteOrg)
 
 //Product Routes

@@ -133,3 +133,63 @@ exports.deleteOrg = async(req,res)=>{
         })
     }
 }
+
+exports.updateOrg = async(req,res)=>{
+    if(!req.body){
+        return res.json({
+            success:false,
+            message:"Something went wrong...!"
+        })
+    }
+
+    const {userId} = req.body
+    const user = await Org.findOne({userId})
+
+    if(!user){
+        return res.json({
+            success:false,
+            message:"Something went wrong...!"
+        })
+    }
+
+    const {orgId,name,contactNo,city,sellItem,address,openingHours,imgLink,accountType} = req.body
+    verifyOrgData(name,contactNo,city,sellItem,address,userId,openingHours,imgLink,accountType)
+        .then(async()=>{
+            const updateObj = {
+                name,
+                contactNo,
+                city,
+                sellItem,
+                address,
+                userId,
+                openingHours,
+                imgLink
+            }
+        
+            try{
+                const updatedOrg = await Org.findByIdAndUpdate(orgId,updateObj,{useFindAndModify:false})
+                if(!updatedOrg){
+                    return res.json({
+                        success:false,
+                        message:"Unable to Update Organization...!"
+                    })
+                }
+            
+                return res.json({
+                    success:true,
+                    message:"Successfully Updated Organization...!"
+                })
+            }catch(err){
+                return res.json({
+                    success:false,
+                    message:"Something went wrong...!"
+                })
+            }
+        })
+        .catch((err)=>{
+            return res.json({
+                success:false,
+                message:err
+            })
+        })
+}
