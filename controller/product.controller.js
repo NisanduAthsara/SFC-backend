@@ -10,7 +10,6 @@ exports.newProduct = async(req,res)=>{
     }
 
     const {productName, brand, status, organizationId, imgLink, nextComingDate} = req.body
-    // console.log(productName, brand, status, organizationId, imgLink, nextComingDate)
     checkProduct(productName, brand, status, organizationId, imgLink, nextComingDate)
         .then(async (result)=>{
             const prev = await Product.countDocuments({organizationId})
@@ -136,4 +135,51 @@ exports.deleteProduct = async(req,res)=>{
             message:"Something went wrong...!"
         })
     }
+}
+
+exports.updateProduct = async(req,res)=>{
+    if(!req.body){
+        return res.json({
+            success:false,
+            message:"Something went wrong...!"
+        })
+    }
+    const {productName, brand, status, organizationId, imgLink, nextComingDate,productId} = req.body
+    checkProduct(productName, brand, status, organizationId, imgLink, nextComingDate)
+        .then(async()=>{
+            const newObj = {
+                productName, 
+                brand, 
+                status, 
+                organizationId, 
+                imgLink, 
+                nextComingDate
+            }
+
+            try{
+                const updatedProduct = await Product.findByIdAndUpdate(productId,newObj,{useFindAndModify:false})
+                if(!updatedProduct){
+                    return res.json({
+                        success:false,
+                        message:"Unable to Update Product...!"
+                    })
+                }
+
+                return res.json({
+                    success:true,
+                    message:"Successfully Updated Product...!"
+                })
+            }catch(err){
+                return res.json({
+                    success:false,
+                    message:"Something went wrong...!"
+                })
+            }
+        })
+        .catch((err)=>{
+            return res.json({
+                success:false,
+                message:err
+            })
+        })
 }
