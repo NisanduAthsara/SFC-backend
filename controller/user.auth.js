@@ -116,6 +116,94 @@ exports.authMiddleware = async (req,res,next)=>{
     }
 }
 
+exports.buyerAuthMiddleware = async (req,res,next)=>{
+    const token = req.body.token
+    if(!token){
+        return res.json({
+            success:false,
+            message:"Unauthorized User...!"
+        })
+    }
+    let decodeToken
+    try{
+        decodeToken = jwt.verify(token,process.env.TOKEN)
+    }catch(err){
+        return res.json({
+            success:false,
+            message:"Unauthorized User...!"
+        })
+    }
+
+    if(!decodeToken.id){
+        return res.json({
+            success:false,
+            message:"Unauthorized User...!"
+        })
+    } 
+
+    try {
+        const user = await User.findById(decodeToken.id)
+        if(user.accountType !== 'Buyer'){
+            return res.json({
+                success:false,
+                message:"Unauthorized User...!"
+            })
+        }
+
+        next()
+
+    } catch (error) {
+        return res.json({
+            success:false,
+            message:"Something went wrong...!"
+        })
+    }
+}
+
+exports.sellerAuthMiddleware = async (req,res,next)=>{
+    const token = req.body.token
+    if(!token){
+        return res.json({
+            success:false,
+            message:"Unauthorized User...!"
+        })
+    }
+    let decodeToken
+    try{
+        decodeToken = jwt.verify(token,process.env.TOKEN)
+    }catch(err){
+        return res.json({
+            success:false,
+            message:"Unauthorized User...!"
+        })
+    }
+
+    if(!decodeToken.id){
+        return res.json({
+            success:false,
+            message:"Unauthorized User...!"
+        })
+    } 
+
+    try {
+        const user = await User.findById(decodeToken.id)
+        if(user.accountType !== 'Seller'){
+            return res.json({
+                success:false,
+                message:"Unauthorized User...!"
+            })
+        }
+
+        next()
+
+    } catch (error) {
+        return res.json({
+            success:false,
+            message:"Something went wrong...!"
+        })
+    }
+}
+
 exports.checkUserToken = async (req,res)=>{
     const token = req.body.token
     if(!token){
